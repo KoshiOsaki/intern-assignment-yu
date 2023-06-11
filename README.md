@@ -9,6 +9,6 @@
 
 ### 起動方法
 
-1. env.local を埋める
+1. .env.local を埋める
 2. `yarn install`
 3. `yarn dev`
