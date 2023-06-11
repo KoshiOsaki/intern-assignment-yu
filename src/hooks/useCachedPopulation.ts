@@ -37,7 +37,7 @@ export const useCachedPopulation = () => {
           data: Result[];
         };
       };
-      console.log(data);
+
       const result = data.result.data;
       const populationData = result.find((data) => data.label === populationType);
       if (!populationData) throw new Error('no data');
@@ -49,7 +49,6 @@ export const useCachedPopulation = () => {
       cache.current[cacheKey] = populationList;
       return populationList;
     } catch (e) {
-      console.log(e);
       throw new Error('人口データの取得に失敗しました。');
     }
   };
