@@ -45,7 +45,7 @@ const PopulationChart = (props: Props) => {
       y: {
         title: {
           display: true,
-          text: '人口 (1000人)',
+          text: '人口 (千人)',
         },
         ticks: {
           callback: (value: any) => {
@@ -69,11 +69,11 @@ const PopulationChart = (props: Props) => {
   };
 
   return (
-    <div className="w-[500px] h-[250px]">
+    <div>
       {prefWithDisplayPopulationList.length > 0 ? (
         <Line data={data} options={options} />
       ) : (
-        <div className="bg-white w-full h-full text-center flex items-center">
+        <div className="bg-white w-full h-[250px] text-center flex items-center">
           <p className="w-full">表示するデータがありません</p>
         </div>
       )}

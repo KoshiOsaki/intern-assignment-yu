@@ -120,7 +120,7 @@ const Home: NextPage = () => {
                 <p>選択をリセット</p>
               </button>
             </div>
-            <div className="grid grid-cols-6 gap-4 border-2 border-gray-400 p-3 rounded-md">
+            <div className="grid grid-cols-5 md:grid-cols-6  gap-4 border-2 border-gray-400 p-3 rounded-md">
               {prefList.map((pref) => (
                 <div key={pref.prefCode} className="flex items-center">
                   <input
