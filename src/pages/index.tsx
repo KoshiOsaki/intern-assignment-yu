@@ -6,10 +6,21 @@ import { PrefWithDisplayPopulation, Prefecture } from '@/types/prefecture';
 
 import type { NextPage } from 'next';
 
-const Home: NextPage = () => {
-  // 後でSGにする
-  const [prefList, setPrefList] = useState<Prefecture[]>([]);
+interface Props {
+  prefList: Prefecture[];
+}
 
+export const getStaticProps = async () => {
+  const prefList = await fetchPrefList();
+  return {
+    props: {
+      prefList,
+    },
+  };
+};
+
+const Home: NextPage<Props> = (props: Props) => {
+  const { prefList } = props;
   const [populationType, setPopulationType] = useState<string>('総人口');
   const [checkedPrefectureIdList, setCheckedPrefectureIdList] = useState<number[]>([]);
   const [prefWithDisplayPopulationList, setPrefWithDisplayPopulationList] = useState<PrefWithDisplayPopulation[]>([]);
@@ -22,11 +33,6 @@ const Home: NextPage = () => {
     } else {
       setCheckedPrefectureIdList((prev) => prev.filter((_id) => _id !== id));
     }
-  };
-
-  const fetchDisplayPrefData = async () => {
-    const prefList = await fetchPrefList();
-    setPrefList(prefList);
   };
 
   const fetchDisplayPopulationData = async () => {
@@ -43,10 +49,6 @@ const Home: NextPage = () => {
     }
     setPrefWithDisplayPopulationList(_prefWithDisplayPopulationList);
   };
-
-  useEffect(() => {
-    void fetchDisplayPrefData();
-  }, []);
 
   useEffect(() => {
     void fetchDisplayPopulationData();
