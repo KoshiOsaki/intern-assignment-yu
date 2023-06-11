@@ -38,14 +38,19 @@ const Home: NextPage<Props> = (props: Props) => {
   const fetchDisplayPopulationData = async () => {
     const _prefWithDisplayPopulationList: PrefWithDisplayPopulation[] = [];
     for (const prefId of checkedPrefectureIdList) {
-      const populationList = await fetchPopulation(prefId, populationType);
-      const pref = prefList.find((pref) => pref.prefCode === prefId);
-      if (!pref) return;
-      _prefWithDisplayPopulationList.push({
-        prefCode: pref.prefCode,
-        prefName: pref.prefName,
-        populationList: populationList,
-      });
+      try {
+        const populationList = await fetchPopulation(prefId, populationType);
+        const pref = prefList.find((pref) => pref.prefCode === prefId);
+        if (!pref) return;
+        _prefWithDisplayPopulationList.push({
+          prefCode: pref.prefCode,
+          prefName: pref.prefName,
+          populationList: populationList,
+        });
+      } catch (e) {
+        const error = e as Error;
+        alert(error.message);
+      }
     }
     setPrefWithDisplayPopulationList(_prefWithDisplayPopulationList);
   };
@@ -59,6 +64,7 @@ const Home: NextPage<Props> = (props: Props) => {
       <header className="text-blue-600 w-full font-bold  text-lg  px-4 py-2 border-b-2 border-gray-300">
         都道府県の総人口推移
       </header>
+
       <main className="max-w-[500px] mx-auto py-4 flex flex-col gap-8">
         <div className="flex flex-col gap-4">
           <div className="flex items-center">
@@ -87,15 +93,16 @@ const Home: NextPage<Props> = (props: Props) => {
             </div>
             <div className="grid grid-cols-5 md:grid-cols-6  gap-4 border-2 border-gray-400 p-3 rounded-md">
               {prefList.map((pref) => (
-                <div key={pref.prefCode} className="flex items-center">
+                <div key={pref.prefCode} className="flex items-center ">
                   <input
                     type="checkbox"
                     id={`pref-${pref.prefCode}`}
                     value={pref.prefCode}
                     checked={checkedPrefectureIdList.includes(pref.prefCode)}
                     onChange={() => handleCheckboxChange(pref.prefCode, true)}
+                    className="cursor-pointer"
                   />
-                  <label htmlFor={`pref-${pref.prefCode}`} className="text-xs">
+                  <label htmlFor={`pref-${pref.prefCode}`} className="text-xs cursor-pointer">
                     {pref.prefName}
                   </label>
                 </div>
