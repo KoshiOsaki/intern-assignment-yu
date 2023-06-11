@@ -61,7 +61,7 @@ const PopulationChart = (props: Props) => {
   return (
     <div>
       {prefWithDisplayPopulationList.length > 0 ? (
-        <Line data={data} options={options} />
+        <Line id="population-chart" data={data} options={options} />
       ) : (
         <div className="bg-white w-full h-[250px] text-center flex items-center">
           <p className="w-full">表示するデータがありません</p>
