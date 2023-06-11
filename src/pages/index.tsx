@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+import PopulationChart from '@/components/populationChart';
 import { Population, Prefecture } from '@/types/prefecture';
 
 import type { NextPage } from 'next';
@@ -137,7 +138,7 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        {/* <PopulationChart prefWithDisplayPopulationList={prefWithDisplayPopulationList} /> */}
+        <PopulationChart prefWithDisplayPopulationList={prefWithDisplayPopulationList} />
       </main>
     </div>
   );
