@@ -1,29 +1,10 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import PopulationChart from '@/components/populationChart';
-import { Population, Prefecture } from '@/types/prefecture';
+import { fetchPopulation, fetchPrefList } from '@/functions/prefecture';
+import { PrefWithDisplayPopulation, Prefecture } from '@/types/prefecture';
 
 import type { NextPage } from 'next';
-
-const populationTypeList = ['総人口', '年少人口', '生産年齢人口', '老年人口'];
-
-const headers = {
-  'X-API-KEY': process.env.NEXT_PUBLIC_RESAS_API_KEY,
-};
-
-export interface PrefWithDisplayPopulation extends Prefecture {
-  populationList: Population[];
-}
-
-interface Result {
-  label: string;
-  data: {
-    year: number;
-    value: number;
-    reate?: number;
-  }[];
-}
 
 const Home: NextPage = () => {
   // 後でSGにする
@@ -33,6 +14,8 @@ const Home: NextPage = () => {
   const [checkedPrefectureIdList, setCheckedPrefectureIdList] = useState<number[]>([]);
   const [prefWithDisplayPopulationList, setPrefWithDisplayPopulationList] = useState<PrefWithDisplayPopulation[]>([]);
 
+  const populationTypeList = ['総人口', '年少人口', '生産年齢人口', '老年人口'];
+
   const handleCheckboxChange = (id: number, isChecked: boolean) => {
     if (isChecked) {
       setCheckedPrefectureIdList((prev) => [...prev, id]);
@@ -41,35 +24,15 @@ const Home: NextPage = () => {
     }
   };
 
-  const fetchPrefData = async () => {
-    const res = await axios.get('https://opendata.resas-portal.go.jp/api/v1/prefectures', {
-      headers: headers,
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const data = res.data.result as Prefecture[];
-    setPrefList(data);
+  const fetchDisplayPrefData = async () => {
+    const prefList = await fetchPrefList();
+    setPrefList(prefList);
   };
 
-  const SetPopulationFunc = async () => {
+  const fetchDisplayPopulationData = async () => {
     const _prefWithDisplayPopulationList: PrefWithDisplayPopulation[] = [];
     for (const prefId of checkedPrefectureIdList) {
-      const res = await axios.get(
-        `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${prefId}`,
-        {
-          headers: headers,
-        },
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const result = res.data.result.data as Result[];
-      const populationData = result.find((data) => data.label === populationType);
-      if (!populationData) return;
-      const data = populationData.data;
-      const populationList = data.map((data) => {
-        return {
-          year: data.year,
-          value: data.value,
-        };
-      });
+      const populationList = await fetchPopulation(prefId, populationType);
       const pref = prefList.find((pref) => pref.prefCode === prefId);
       if (!pref) return;
       _prefWithDisplayPopulationList.push({
@@ -82,11 +45,11 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    void fetchPrefData();
+    void fetchDisplayPrefData();
   }, []);
 
   useEffect(() => {
-    void SetPopulationFunc();
+    void fetchDisplayPopulationData();
   }, [checkedPrefectureIdList, populationType]);
 
   return (

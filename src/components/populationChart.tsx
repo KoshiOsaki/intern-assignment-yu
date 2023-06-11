@@ -1,7 +1,8 @@
 import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-import { PrefWithDisplayPopulation } from '@/pages';
+import { CHART_COLOR_LIST } from '@/types/color';
+import { PrefWithDisplayPopulation } from '@/types/prefecture';
 
 Chart.register(...registerables);
 
@@ -9,19 +10,8 @@ interface Props {
   prefWithDisplayPopulationList: PrefWithDisplayPopulation[];
 }
 
-const colorList = [
-  'rgba(255, 99, 132, 1)',
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 206, 86, 1)',
-  'rgba(75, 192, 192, 1)',
-  'rgba(153, 102, 255, 1)',
-  'rgba(255, 159, 64, 1)',
-];
-
 const PopulationChart = (props: Props) => {
   const { prefWithDisplayPopulationList } = props;
-
-  console.log(prefWithDisplayPopulationList);
 
   const data = {
     labels: prefWithDisplayPopulationList[0]?.populationList.map((population) => population.year),
@@ -29,8 +19,8 @@ const PopulationChart = (props: Props) => {
       label: pref.prefName,
       data: pref.populationList.map((population) => population.value),
       fill: false,
-      borderColor: colorList[index % colorList.length],
-      backgroundColor: colorList[index % colorList.length],
+      borderColor: CHART_COLOR_LIST[index % CHART_COLOR_LIST.length],
+      backgroundColor: CHART_COLOR_LIST[index % CHART_COLOR_LIST.length],
       tension: 0.1,
     })),
   };
