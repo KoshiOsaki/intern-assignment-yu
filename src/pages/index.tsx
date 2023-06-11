@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
 import PopulationChart from '@/components/populationChart';
-import { fetchPopulation, fetchPrefList } from '@/functions/prefecture';
+import { fetchPrefList } from '@/functions/prefecture';
+import { useCachedPopulation } from '@/hooks/useCachedPopulation';
 import { PrefWithDisplayPopulation, Prefecture } from '@/types/prefecture';
 
 import type { NextPage } from 'next';
@@ -27,11 +28,13 @@ const Home: NextPage<Props> = (props: Props) => {
 
   const populationTypeList = ['総人口', '年少人口', '生産年齢人口', '老年人口'];
 
+  const { fetchPopulation } = useCachedPopulation();
+
   const handleCheckboxChange = (id: number, isChecked: boolean) => {
     if (isChecked) {
       setCheckedPrefectureIdList((prev) => [...prev, id]);
     } else {
-      setCheckedPrefectureIdList((prev) => prev.filter((_id) => _id !== id));
+      setCheckedPrefectureIdList((prev) => prev.filter((prefId) => prefId !== id));
     }
   };
 
@@ -99,7 +102,7 @@ const Home: NextPage<Props> = (props: Props) => {
                     id={`pref-${pref.prefCode}`}
                     value={pref.prefCode}
                     checked={checkedPrefectureIdList.includes(pref.prefCode)}
-                    onChange={() => handleCheckboxChange(pref.prefCode, true)}
+                    onChange={(e) => handleCheckboxChange(pref.prefCode, e.target.checked)}
                     className="cursor-pointer"
                   />
                   <label htmlFor={`pref-${pref.prefCode}`} className="text-xs cursor-pointer">
