@@ -1,7 +1,7 @@
 import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-import { CHART_COLOR_LIST } from '@/types/color';
+import { CHART_COLOR_LIST } from '@/types/constants/color';
 import { PrefWithDisplayPopulation } from '@/types/prefecture';
 
 Chart.register(...registerables);
