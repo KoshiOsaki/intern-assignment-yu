@@ -44,7 +44,7 @@ const Home: NextPage<Props> = (props: Props) => {
       try {
         const populationList = await fetchPopulation(prefId, populationType);
         const pref = prefList.find((pref) => pref.prefCode === prefId);
-        if (!pref) return [];
+        if (!pref) return;
         _prefWithDisplayPopulationList.push({
           prefCode: pref.prefCode,
           prefName: pref.prefName,
@@ -53,10 +53,9 @@ const Home: NextPage<Props> = (props: Props) => {
       } catch (e) {
         const error = e as Error;
         alert(error.message);
-        return [];
       }
     }
-    return _prefWithDisplayPopulationList;
+    setPrefWithDisplayPopulationList(_prefWithDisplayPopulationList);
   };
 
   useEffect(() => {
